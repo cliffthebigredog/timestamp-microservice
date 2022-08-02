@@ -28,6 +28,15 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+//handle empty date parameter
+app.get("/api/", function(req,res) {
+  const currentDate = new Date();
+  res.json({
+    unix: currentDate.getTime(),
+    utc: currentDate.toUTCString()
+  });
+});
+
 //API endpoint for date
 app.get("/api/:date", function (req, res) {
 
