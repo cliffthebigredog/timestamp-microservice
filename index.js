@@ -30,26 +30,33 @@ app.get("/api/hello", function (req, res) {
 
 //API endpoint for date
 app.get("/api/:date", function (req, res) {
-
-  // if date is of format 2015-12-25
-  if(req.params.date.includes("-")) {
-    const dateRouteParam = new Date(req.params.date)
+  
+  // handle invalid dates
+  if(new Date(req.params.date) == "Invalid Date" && isNaN(new Date(req.params.date)))  {
     res.json({
-      unix: dateRouteParam.getTime(), 
-      utc: dateRouteParam.toUTCString()
+      error: "Invalid Date"
     });
-  }
+  } else  {
+    // if date is of format 2015-12-25
+    if(req.params.date.includes("-")) {
+      const dateRouteParam = new Date(req.params.date)
+      res.json({
+        unix: dateRouteParam.getTime(), 
+        utc: dateRouteParam.toUTCString()
+      });
+    }
 
-  //for unix timestamps
-  else {
-    const unixToUTC = new Date();  //init date object
-    const unix = parseInt(req.params.date)
-    unixToUTC.setTime(unix)  
-
-    res.json({
-      unix: unix,
-      utc: unixToUTC.toUTCString()
-    });
+    //if unix timestamps
+    if(!req.params.date.includes("-")  && parseInt(req.params.date)) {
+      const unixToUTC = new Date();  //init date object
+      const unix = parseInt(req.params.date)
+      unixToUTC.setTime(unix)  
+  
+      res.json({
+        unix: unix,
+        utc: unixToUTC.toUTCString()
+      });
+    }
   }
 });
 
