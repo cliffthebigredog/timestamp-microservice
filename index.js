@@ -37,7 +37,7 @@ app.get("/api/:date", function (req, res) {
   }  
   else  {
     //Unix timestamp - Number
-    if(!req.params.date.includes("-") && !isNaN(Number(req.params.date)))  {
+    if(!isNaN(Number(req.params.date)))  {
       const unixToUTC = new Date();  //init date object
       const unix = parseInt(req.params.date); //convert string to number
       unixToUTC.setTime(unix);
@@ -49,7 +49,7 @@ app.get("/api/:date", function (req, res) {
     }
 
     // other Date types e.g. Fri, 25 Dec 2015 00:00:00 GMT 
-    if(!req.params.date.includes("-") && isNaN(Number(req.params.date)))   {
+    if(isNaN(Number(req.params.date)))   {
       const date = new Date(req.params.date);
       res.json({
         unix: date.getTime(),
