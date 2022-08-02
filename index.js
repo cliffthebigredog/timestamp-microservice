@@ -33,27 +33,27 @@ app.get("/api/:date", function (req, res) {
 
   // handle invalid dates
   if(isNaN(new Date (req.params.date)) && isNaN(Number(req.params.date)))  {
-    res.json({ error: 'Invalid Date' });
+    res.json({ error: "Invalid Date" });
   }  
   else  {
-    // if date is of format 2015-12-25
-    if(req.params.date.includes("-")) {
-      const dateRouteParam = new Date(req.params.date)
-      res.json({
-        unix: dateRouteParam.getTime(), 
-        utc: dateRouteParam.toUTCString()
-      });
-    }
-
-    //if unix timestamps
-    if(!req.params.date.includes("-"))  {
+    //Unix timestamp - Number
+    if(!req.params.date.includes("-") && !isNaN(Number(req.params.date)))  {
       const unixToUTC = new Date();  //init date object
-      const unix = parseInt(req.params.date)
-      unixToUTC.setTime(unix)  
+      const unix = parseInt(req.params.date); //convert string to number
+      unixToUTC.setTime(unix);
 
       res.json({
         unix: unix,
         utc: unixToUTC.toUTCString()
+      });
+    }
+
+    // other Date types e.g. Fri, 25 Dec 2015 00:00:00 GMT 
+    if(!req.params.date.includes("-") && isNaN(Number(req.params.date)))   {
+      const date = new Date(req.params.date);
+      res.json({
+        unix: date.getTime(),
+        utc: date.toUTCString()
       });
     }
   }
