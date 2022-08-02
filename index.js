@@ -30,13 +30,12 @@ app.get("/api/hello", function (req, res) {
 
 //API endpoint for date
 app.get("/api/:date", function (req, res) {
-  
+
   // handle invalid dates
-  if(new Date(req.params.date) == "Invalid Date" && isNaN(new Date(req.params.date)))  {
-    res.json({
-      error: "Invalid Date"
-    });
-  } else  {
+  if(isNaN(new Date (req.params.date)) && isNaN(Number(req.params.date)))  {
+    res.json({ error: 'Invalid Date' });
+  }  
+  else  {
     // if date is of format 2015-12-25
     if(req.params.date.includes("-")) {
       const dateRouteParam = new Date(req.params.date)
@@ -47,11 +46,11 @@ app.get("/api/:date", function (req, res) {
     }
 
     //if unix timestamps
-    if(!req.params.date.includes("-")  && parseInt(req.params.date)) {
+    if(!req.params.date.includes("-"))  {
       const unixToUTC = new Date();  //init date object
       const unix = parseInt(req.params.date)
       unixToUTC.setTime(unix)  
-  
+
       res.json({
         unix: unix,
         utc: unixToUTC.toUTCString()
